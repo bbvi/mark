@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+<canvas id="canvas" style="border:1px solid #d3d3d3;width:100%;">
+Your browser does not support the HTML5 canvas tag.
+</canvas><br>
+<input type="file" id="upload" onchange="previewFile()"><br>
+<input type="time" id="time" value="18:23" placeholder="时间"><br>
+<input type="date" id="date" value="2023-03-22" placeholder="日期"><br>
+<input type="text" id="location" value="长沙市 振业城三期B区" placeholder="地点"><br>
+<input type="text" id="note" value="工作记录" placeholder="备注"><br>
+<button onclick="downloadImage()">下载图片</button>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<script>
+  let img = new Image();
+  img.src ="https://nimg.ws.126.net/?url=http%3A%2F%2Fcms-bucket.ws.126.net%2F2023%2F0714%2Faf788dbbj00rxrcgi00kuc002yo01z3c.jpg&thumbnail=660x2147483647&quality=80&type=jpg" //
+  let canvas = document.getElementById('canvas');
+  let ctx = canvas.getContext('2d');
+  let watermarkText = '';
+  let fontsize = 20;
+  let watermarkX = 0;
+  let watermarkY = 0;
+  let imgWidth=0;
+  let imgHeight=0;
+  let windowWidth= document.body.clientWidth
+
+  let svg = new Image();
+  svg.src = 'data:image/svg+xml,' + encodeURIComponent('<?xml version="1.0" ?><svg id="Outlined" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><title/><g id="Fill"  fill="white"><path d="M16,2,3,6.28V12C3,26.61,15.63,29.94,15.76,30L16,30l.24-.06c.13,0,12.76-3.36,12.76-18V6.28ZM27,12c0,12.1-9.31,15.45-11,16C14.31,27.45,5,24.1,5,12V7.72L16,4.05,27,7.72Z"/><path d="M11.59,15l-1.42,1.41,2.29,2.29a2,2,0,0,0,1.42.59,2,2,0,0,0,1.41-.59l6.54-6.53-1.42-1.42-6.53,6.54Z"/></g></svg>');
+
+ 
+  canvas.addEventListener('click', function(e) {
+    const canvasWidth=document.getElementById("canvas").width
+    const widthRate=canvasWidth/windowWidth
+    // 设置目标元素的新位置
+    watermarkX= e.layerX*widthRate
+    watermarkY =e.layerY*widthRate
+
+    drawImageAndWatermark();
+  });
+
+  
+
+  function previewFile() {
+    let file = document.querySelector('input[type=file]').files[0];
+    let reader = new FileReader();
+
+    reader.onloadend = function () {
+      img.src =reader.result;
+      img.onload = function() {
+
+        canvas.width =imgWidth= img.width;
+        canvas.height = imgHeight=img.height;
+        drawImageAndWatermark();
+      }
+    }
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function drawImageAndWatermark() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    let time = document.getElementById('time').value;
+    let date = document.getElementById('date').value;
+    let location = document.getElementById('location').value;
+    let note = document.getElementById('note').value;
+   
+    ctx.fillStyle = "white";
+
+    let yPanding=watermarkY;
+    
+    const timeFontSize=160;
+    yPanding+=timeFontSize
+    ctx.font = `${timeFontSize}px Arial`;
+    ctx.fillText(time, watermarkX, yPanding );
+
+    const dateFontSize=52;
+    yPanding+=dateFontSize+60;
+    ctx.font = `${dateFontSize}px Arial`;
+    ctx.fillText(date, watermarkX, yPanding);
+
+
+    const locationFontSize=52;
+    yPanding+=locationFontSize+36;
+    ctx.font = `${locationFontSize}px Arial`;
+    ctx.fillText(location, watermarkX, yPanding);
+
+    const noteFontSize=52;
+    yPanding+=noteFontSize+36;
+    ctx.font = `${noteFontSize}px Arial`;
+    ctx.fillText(note, watermarkX,yPanding);
+   
+
+
+    const markX=watermarkX+30;
+    const markY=yPanding+40;
+    const markwidth=ctx.measureText('马克水印').width-20;
+    const markHeight=80
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.beginPath();
+    ctx.moveTo(markX , markY);
+    ctx.lineTo(markX + markwidth, markY);
+    ctx.quadraticCurveTo(markX + markwidth+ markHeight/2 , markY, markX + markwidth+ markHeight/2, markY + markHeight/2 );
+    ctx.moveTo(markX + markwidth+ markHeight/2, markY + markHeight/2 );
+    ctx.quadraticCurveTo(markX + markwidth+markHeight/2 , markY + markHeight, markX + markwidth, markY + markHeight);
+    ctx.lineTo( markX , markY + markHeight);
+    ctx.quadraticCurveTo(markX -markHeight/2, markY + markHeight, markX -markHeight/2 , markY + markHeight / 2);
+    ctx.lineTo( markX -markHeight/2 , markY + markHeight / 2);
+    ctx.quadraticCurveTo( markX -markHeight/2 , markY  , markX  , markY);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = "white";
+
+    const logoFontSize=70;
+    yPanding+=logoFontSize+20;
+    ctx.drawImage(svg, watermarkX+10 , yPanding-40 ,  55,60);
+    const markFont=34;
+    ctx.font = `${markFont}px Arial`;
+    ctx.fillText('马克水印', watermarkX  +  80,yPanding);
+  }
+
+  function downloadImage() {
+    let link = document.createElement('a');
+    link.download = 'image.png';
+    link.href = canvas.toDataURL('image/jpeg')
+    link.click();
+  }
+
+</script>
+
+</body>
+</html>
