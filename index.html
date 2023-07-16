@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
+  <meta name="viewport" 
+content="width=device-width, initial-scale=1.0 , user-scalable=no" >
 <body>
 
 
-<canvas id="canvas" style="border:1px solid #d3d3d3;width:100%;">
+<canvas id="canvas" style="border:1px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.
 </canvas><br>
 <input type="file" id="upload" onchange="previewFile()"><br>
 <input type="time" id="time" value="18:23" placeholder="时间"><br>
 <input type="date" id="date" value="2023-03-22" placeholder="日期"><br>
-<input type="text" id="location" value="长沙市 振业城三期B区" placeholder="地点"><br>
+<input type="text" id="location" value="长沙市1 振业城三期B区" placeholder="地点"><br>
 <input type="text" id="note" value="工作记录" placeholder="备注"><br>
 <button onclick="downloadImage()">下载图片</button>
 <br>
