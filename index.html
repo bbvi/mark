@@ -7,15 +7,7 @@
 
 <body>
 
-<style>
-  @media only screen and (max-width: 600px) {
-  body {
-    background-color: lightblue;
-  }
-}
-
-</style>
-<canvas id="canvas" style="border:1px solid #d3d3d3;width: 100%;">
+<canvas id="canvas" style="border:1px solid #d3d3d3;width:100%;">
 Your browser does not support the HTML5 canvas tag.
 </canvas><br>
 <input type="file" id="upload" onchange="previewFile()" style=""><br>
@@ -24,6 +16,7 @@ Your browser does not support the HTML5 canvas tag.
 <input type="text" id="location" value="长沙市 振业城三期B区" placeholder="地点"><br>
 <input type="text" id="note" value="工作记录" placeholder="备注"><br>
 <button onclick="downloadImage()">下载图片</button>
+<button onclick="openFullscreen();">Go Fullscreen</button>
 <br>
 <br>
 <br>
@@ -150,6 +143,19 @@ Your browser does not support the HTML5 canvas tag.
     link.click();
   }
 
+  function openFullscreen() {
+  if (canvas.requestFullscreen) {
+    canvas.requestFullscreen();
+  } else if (canvas.webkitRequestFullscreen) { // Chrome, Safari and Opera
+    canvas.webkitRequestFullscreen();
+  } else if (canvas.mozRequestFullScreen) { // Firefox
+    canvas.mozRequestFullScreen();
+  } else if (canvas.msRequestFullscreen) { // IE/Edge
+    canvas.msRequestFullscreen();
+  } else if (canvas.webkitEnterFullscreen) { // iPhone/iPad
+    canvas.webkitEnterFullscreen();
+  }
+  }
 </script>
 
 </body>
